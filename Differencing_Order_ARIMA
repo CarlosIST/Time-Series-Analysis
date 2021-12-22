@@ -1,0 +1,42 @@
+def differencing_tests(dataframe, ticker, columnName):
+  '''
+  DESC.: Function that takes a dataframe, plots and performs tests for differencing
+  INPUT: dataframe (pandas, taken from yfinance)
+  INPUT: ticker (str)
+  INPUT: columnName (str)
+  OUTPUT: PLots and results from tests specifying necessary differencing
+  '''
+  ## Remove index from dataframe
+  series1 = dataframe.reset_index(drop=True)
+
+  ## Declare as dataframe
+  series = DataFrame(series1[columnName])
+
+  ## Figure plot dimensions
+  plt.rcParams.update({'figure.figsize':(9,7), 'figure.dpi':120})
+
+  ## Original Series
+  fig, axes = plt.subplots(3, 2, sharex=True)
+  axes[0, 0].plot(series); axes[0, 0].set_title('Original Series ' + ticker)
+  plot_acf(series, ax=axes[0, 1])
+
+  ## 1st Differencing
+  axes[1, 0].plot(series.diff()); axes[1, 0].set_title('1st Order Differencing')
+  plot_acf(series.diff().dropna(), ax=axes[1, 1])
+
+  ## 2nd Differencing
+  axes[2, 0].plot(series.diff().diff()); axes[2, 0].set_title('2nd Order Differencing')
+  plot_acf(series.diff().diff().dropna(), ax=axes[2, 1])
+
+  plt.show()
+
+  print("\n")
+  print("     ***  Results from differencing  ***   ")
+  ## Adf Test
+  print("Differences by ADF: " + str(ndiffs(series, test='adf')))  # 2
+
+  ## KPSS test
+  print("Differences by KPSS: " + str(ndiffs(series, test='kpss')))  # 0
+
+  ## PP test:
+  print("Differences by PP: " + str(ndiffs(series, test='pp')))
