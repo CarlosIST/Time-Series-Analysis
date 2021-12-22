@@ -1,0 +1,4 @@
+import statsmodels
+statsmodels.__version__
+
+ $ pip install statsmodels --upgrade
