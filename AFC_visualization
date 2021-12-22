@@ -1,0 +1,36 @@
+import pandas as pd
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+import matplotlib.pyplot as plt
+
+def acf_viz(dataframe, ticker, columnName):
+  '''
+  DESC.: Function that takes a dataframe and outputs ACF 
+  INPUT: dataframe (pandas, taken from yfinance)
+  INPUT: ticker (str)
+  INPUT: columnName (str)
+  '''
+  ## Remove index from dataframe
+  series1 = dataframe.reset_index(drop=True)
+
+  ## Declare as dataframe
+  series = DataFrame(series1[columnName])
+
+  ## Diensions for plots
+  plt.rcParams.update({'figure.figsize':(9,3), 'figure.dpi':120})
+
+  ## Format for plots
+  fig, axes = plt.subplots(1, 2) #sharex=True)
+
+  ## Declare 1st (left) plot
+  axes[0].plot(seriesBLK.diff()); axes[0].set_title('1st Differencing '+ticker)
+
+  ## Limit in X for 2nd plot
+  axes[1].set(xlim=(0,20))
+
+  ## Limit in Y for 2nd Plot
+  axes[1].set(ylim=(0,0.5))
+
+  ## Declare 2nd (right) plot
+  plot_acf(seriesBLK.diff().dropna(), ax=axes[1])
+
+  plt.show()
