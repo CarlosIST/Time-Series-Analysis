@@ -1,0 +1,17 @@
+def ADF_test (dataframe, ticker, alpha_value):
+  '''
+  DESC: Function that deterines ADF test and tells if differencing is needed
+  INPUT: dataframe (pandas, taken from yfinance)
+  INPUT: ticker (str)
+  INPUT: alpha_value (float)
+  OUTPUT: Print statements with results
+  '''
+  result = adfuller(dataframe['LOG_RETURN'].dropna())
+  print("*** ADF Test for " + ticker + " ***")
+  print('ADF Statistic: %f' % result[0])  
+  print('p-value: %f' % result[1])
+  if result[1] > alpha_value:
+    print("Needs differencing")
+  else:
+    print("No need for differencing")
+  print("____________________________")
