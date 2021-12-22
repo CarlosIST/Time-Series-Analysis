@@ -1,0 +1,5 @@
+residuals = pd.DataFrame(model_fit.resid)
+fig, ax = plt.subplots(1,2)
+residuals.plot(title="Residuals", ax=ax[0])
+residuals.plot(kind='kde', title='Density', ax=ax[1])
+plt.show()
