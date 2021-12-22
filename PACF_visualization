@@ -1,0 +1,33 @@
+def pacf_viz(dataframe, ticker, columnName):
+  '''
+  DESC.: Function that takes a dataframe and outputs the PACF
+  INPUT: dataframe (pandas, taken from yfinance)
+  INPUT: ticker (str)
+  INPUT: columnName (str)
+  '''
+  ## Remove index from dataframe
+  series1 = dataframe.reset_index(drop=True)
+
+  ## Declare as dataframe
+  series = DataFrame(series1[columnName])
+
+  ## Set dimensions for plots
+  plt.rcParams.update({'figure.figsize':(9,3), 'figure.dpi':120})
+
+  ## Forat for plots
+  fig, axes = plt.subplots(1, 2) #sharex=True)
+
+  ## Declare first (left) plot
+  axes[0].plot(series.diff()); axes[0].set_title('1st Differencing ' + ticker)
+
+  ## X limits for 1st plot
+  axes[0].set(xlim=(0, len(series)))
+
+  ## X and Y limits for 2nd plot
+  axes[1].set(xlim=(0,20))
+  axes[1].set(ylim=(0,1))
+
+  ## Declare 2nd (right) plot
+  plot_pacf(series.diff().dropna(), ax=axes[1], lags = 30)
+
+  plt.show()
