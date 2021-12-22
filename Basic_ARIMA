@@ -1,0 +1,6 @@
+from statsmodels.tsa.arima.model import ARIMA
+
+# 1,0,2 ARIMA Model
+model = ARIMA(seriesBLK, order=(1,0,2))
+model_fit = model.fit()
+print(model_fit.summary())
