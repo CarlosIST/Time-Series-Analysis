@@ -1,0 +1,16 @@
+def drop_date_index(dataframe, columnName):
+  '''
+  DESC.: Function that takes a dataframe and a specified column to 
+          transform it into another dataframe with numerical index
+  INPUT: dataframe (pandas, from yfinance)
+  INPUT: columnName (str)
+  OUTPUT: dataframe with numerical index
+  '''
+
+  ## Drop index
+  series = dataframe.reset_index(drop = True)
+
+  ## Declare as dataframe
+  df_series = pd.DataFrame(series[columnName])
+
+  return df_series
