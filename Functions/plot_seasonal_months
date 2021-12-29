@@ -1,0 +1,43 @@
+import matplotlib as mpl
+
+def plot_seasonal_months(dataframe, ticker, columnName):
+  '''
+  DESC.: Function that takes a dataframe and a specified column in order to plot
+          seasonality by Year (lines) and months (x axis)
+  INPUT: dataframe (pandas, from yfinance)
+  INPUT: ticker (str)
+  INPUT: columnName (str)
+  OUTPUT: plot with seasonality by year and month
+  '''
+  ## Turn date index into column
+  dataframe_no_index = dataframe.reset_index()
+
+  ## Prepare data
+  dataframe_no_index['year'] = [d.year for d in dataframe_no_index.Date]
+  dataframe_no_index['month'] = [d.strftime('%b') for d in dataframe_no_index.Date]
+  years = dataframe_no_index['year'].unique()
+
+  ## Prep Colors
+  np.random.seed(100)
+  mycolors = np.random.choice(list(mpl.colors.XKCD_COLORS.keys()), len(years), replace=False)
+
+  # Draw Plot
+  plt.figure(figsize=(16,12), dpi= 80)
+  for i, y in enumerate(years):
+      if i > 0:        
+          plt.plot('month', columnName,
+                   data=dataframe_no_index.loc[dataframe_no_index.year==y, :],
+                   color=mycolors[i],
+                   label=y)
+          plt.text(dataframe_no_index.loc[dataframe_no_index.year==y, :].shape[0]-.9,
+                   dataframe_no_index.loc[dataframe_no_index.year==y,
+                                          columnName][-1:].values[0],
+                    y,
+                    fontsize=12,
+                    color=mycolors[i])
+
+  # Decoration
+  plt.gca().set(xlim=(-0.3, 11), ylim=(2, 30), ylabel='$'+ ticker + ' Prices$', xlabel='$Month$')
+  plt.yticks(fontsize=12, alpha=.7)
+  plt.title("Seasonal Plot of " + ticker + " Time Series", fontsize=20)
+  plt.show()
