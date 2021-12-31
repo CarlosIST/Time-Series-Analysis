@@ -1,0 +1,44 @@
+from statsmodels.tsa.stattools import adfuller, kpss
+
+def stationarity_tests(dataframe, ticker, column_name, sig_level):
+  '''
+  DESC.: Function that takes a dataframe, a column and a significance level in
+          order to perform ADF and KPSS tests for stationarity
+  INPUT: dataframe (pandas, from yfinance)
+  INPUT: ticker (str)
+  INPUT: column_name (str)
+  INPUT: sig_level (float)
+  OUTPUT: Interpretation fo ADF and KPSS tests
+  '''
+  ## ADF Test
+  result_adf = adfuller(dataframe[column_name].values, autolag='AIC')
+  print("*** ADF Test ***")
+  print("\nH0: Series has a unit root and is non-stationary")
+  print(f'ADF Statistic: {result_adf[0]}')
+  print(f'p-value: {result_adf[1]}')
+  print("p-value interpretation:")
+  if result_adf[1] < sig_level:
+    print(ticker+" series is STATIONARY (reject H0)")
+  else:
+    print(ticker+" series is NON-STATIONARY (don´t reject H0)")
+  print("\n")
+  for key, value in result_adf[4].items():
+      print('Critial Values:')
+      print(f'   {key}, {value}')
+  print("______________________________________________________")
+  print("\n")
+
+  ## KPSS Test
+  print("*** KPSS Test ***")
+  result_kpss = kpss(dataframe[column_name].values, regression='c')
+  print('\nKPSS Statistic: %f' % result_kpss[0])
+  print('p-value: %f' % result_kpss[1])
+  print('p_value Interpretation:')
+  if result_kpss[1] > sig_level:
+    print(ticker+" series trend is STATIONARY (don´t reject H0)")
+  else:
+    print(ticker+" series trend is NON-STATIONARY (reject H0)")
+  print("\n")
+  for key, value in result_kpss[3].items():
+      print('Critial Values:')
+      print(f'   {key}, {value}')
