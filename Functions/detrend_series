@@ -1,0 +1,23 @@
+from statsmodels.tsa.seasonal import seasonal_decompose
+
+def detrend_series(dataframe, decomposed_dataframe, column_name, ticker):
+  '''
+  DESC.: Function that takes the original dataframe along with a the column that
+          was passed through the series_decomposition() function, as well as the
+          dataframe resulting from that function and returns a de-trended
+          dataframe 
+  INPUT: dataframe (pandas, from yfinance)
+  INPUT: decomposed_dataframe (dataframe, from series_decomposition())
+  INPUT: column_name (str)
+  INPUT: ticker (str)
+  OUTPUT: de-trended dataframe
+  '''
+  ## Substract trend component from original series
+  detrended = dataframe[column_name].values - decomposed_dataframe.trend
+
+  ## plot detrended series
+  plt.plot(detrended)
+  plt.title(ticker+' detrended by subtracting the trend component', fontsize=16)
+
+  return detrended
+
