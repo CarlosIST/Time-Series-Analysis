@@ -9,16 +9,27 @@ def series_decomposition(dataframe, ticker, column_name, period):
   INPUT: ticker (str)
   INPUT: column_name (str)
   INPUT: period (int)
-  OUTPUT: plot with multiplicative and additive decompositions
+  OUTPUT: plot with multiplicative and additive decompositions, dataframes for mult and add decomp. respectively
   '''
-  # Multiplicative Decomposition 
+  ## Multiplicative Decomposition 
   result_mul = seasonal_decompose(dataframe[column_name], model='multiplicative', extrapolate_trend='freq', period=period)
 
-  # Additive Decomposition
+  ## Actual Values = Product of (Seasonal * Trend * Resid)
+  df_mul_reconstructed = pd.concat([result_mul.seasonal, result_mul.trend, result_mul.resid, result_mul.observed], axis=1)
+  df_mul_reconstructed.columns = ['seas', 'trend', 'resid', 'actual_values']
+
+  ## Additive Decomposition
   result_add = seasonal_decompose(dataframe[column_name], model='additive', extrapolate_trend='freq', period=period)
+
+  ## Actual Values = Sum of (Seasonal + Trend + Resid)
+  df_add_reconstructed = pd.concat([result_add.seasonal, result_add.trend, result_add.resid, result_add.observed], axis=1)
+  df_add_reconstructed.columns = ['seas', 'trend', 'resid', 'actual_values']
+
 
   # Plot
   plt.rcParams.update({'figure.figsize': (10,10)})
   result_mul.plot().suptitle('Multiplicative Decompose for '+ticker, fontsize=22)
   result_add.plot().suptitle('Additive Decompose for '+ticker, fontsize=22)
   plt.show()
+
+  return df_mul_reconstructed, df_add_reconstructed
