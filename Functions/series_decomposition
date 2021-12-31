@@ -1,0 +1,24 @@
+from statsmodels.tsa.seasonal import seasonal_decompose
+from dateutil.parser import parse
+
+def series_decomposition(dataframe, ticker, column_name, period):
+  '''
+  DESC.: Function that takes a dataframe and a specified column in order to plot
+         both, multiplicative and additive decompositions
+  INPUT: dataframe (pandas, taken from yfinance)
+  INPUT: ticker (str)
+  INPUT: column_name (str)
+  INPUT: period (int)
+  OUTPUT: plot with multiplicative and additive decompositions
+  '''
+  # Multiplicative Decomposition 
+  result_mul = seasonal_decompose(dataframe[column_name], model='multiplicative', extrapolate_trend='freq', period=period)
+
+  # Additive Decomposition
+  result_add = seasonal_decompose(dataframe[column_name], model='additive', extrapolate_trend='freq', period=period)
+
+  # Plot
+  plt.rcParams.update({'figure.figsize': (10,10)})
+  result_mul.plot().suptitle('Multiplicative Decompose for '+ticker, fontsize=22)
+  result_add.plot().suptitle('Additive Decompose for '+ticker, fontsize=22)
+  plt.show()
