@@ -1,0 +1,37 @@
+from statsmodels.nonparametric.smoothers_lowess import lowess
+plt.rcParams.update({'xtick.bottom' : False, 'axes.titlepad':5})
+
+def smoothing_series(dataframe, ticker, column_name, pct1, pct2, ma_window):
+  '''
+  DESC.: Function that takes a dataframe, an specified column, 2 different
+          percentages for lowess and one value for the window for moving average
+          and plots the smoothed time series.
+  INPUT: dataframe (pandas, taken from yfinance)
+  INPUT: ticker (str)
+  INPUT: column_name (str)
+  INPUT: pct1 (float)
+  INPUT: pct2 (float)
+  INPUT: ma_window (int)
+  OUTPUT: Plots the 3 smoothed time series and outputs the 3 different dataframes
+  '''
+  # Import
+  df_orig = dataframe[column_name]
+
+  # 1. Moving Average
+  df_ma = df_orig.rolling(ma_window, center=True, closed='both').mean()
+
+  # 2. Loess Smoothing (5% and 15%)
+  df_loess_a = pd.DataFrame(lowess(df_orig, np.arange(len(df_orig)), frac=pct1)[:, 1], index=df_orig.index, columns=['value'])
+  df_loess_b = pd.DataFrame(lowess(df_orig, np.arange(len(df_orig)), frac=pct2)[:, 1], index=df_orig.index, columns=['value'])
+
+  # Plot
+  fig, axes = plt.subplots(4,1, figsize=(7, 7), sharex=True, dpi=120)
+  df_orig.plot(ax=axes[0], color='k', title='Original Series')
+  df_loess_a['value'].plot(ax=axes[1], title='Loess Smoothed ' + str(pct1*100) + '%')
+  df_loess_b['value'].plot(ax=axes[2], title='Loess Smoothed ' + str(pct2*100) + '%')
+  df_ma.plot(ax=axes[3], title='Moving Average '+str(ma_window))
+  fig.suptitle('Smoothed ' +ticker+ ' Time Series', y=0.95, fontsize=14)
+  plt.show()
+
+  return df_loess_a, df_loess_b, df_ma
+ 
