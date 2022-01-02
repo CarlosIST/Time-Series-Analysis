@@ -3,6 +3,13 @@
 ## log() is a function given in numpy package in python. It calculates the natural log of the value given inside it.
 #data_blk['Log Return'] = np.log(PG['Adj Close']/PG['Adj Close'].shift(1))
 
-def calculate_returns (dataframe):
-  dataframe['LOG_RETURN'] = np.log(dataframe['Adj Close'] / dataframe['Adj Close'].shift(1))
-  return
+def calculate_returns_exp (dataframe, ticker):
+  '''
+  DESC.: Function that takes a dataframe and a ticker to create the column LOG_RETURN_ticker
+          by taking the lorarithm of current level divided by previous level
+  INPUT: dataframe (taken from yfinance)
+  INPUT: ticker (str)
+  OUTPUT: dataframe with additional LOG_RETURN_ticker column
+  '''
+  dataframe['LOG_RETURN_'+ticker] = np.log(dataframe['Adj Close'] / dataframe['Adj Close'].shift(1))
+  return 
