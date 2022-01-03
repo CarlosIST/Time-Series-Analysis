@@ -21,3 +21,8 @@ def adfuller_test(series, signif=0.05, name='', verbose=False):
     else:
         print(f" => P-Value = {p_value}. Weak evidence to reject the Null Hypothesis.")
         print(f" => Series is Non-Stationary.") 
+        
+# ADF Test on each column
+for name, column in df_close_train.iteritems():
+    adfuller_test(column, name=column.name)
+    print('\n')
